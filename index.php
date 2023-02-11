@@ -29,6 +29,7 @@
             CURLOPT_POST => 1,
             CURLOPT_HEADER => 0,
             CURLOPT_HEADER => array(
+                'Content-Type: application/json',
                 'Accept: application/json',
                 'Authorization: Basic'. base64_encode($server_key.':'),
             ),
