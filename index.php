@@ -2,7 +2,7 @@
     $server_key = "SB-Mid-server-gluxBxY-uVxizDzkxad_5JCX";
 
     $is_production = false;
-    $api_url = $is_production ? 'https://app.midtrans.com/snap/v1/transactions' : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+    $api_url = $is_production ? 'https://app.midtrans.com/snap/v2/transactions' : 'https://app.sandbox.midtrans.com/snap/v2/transactions';
     if(!strpos($_SERVER['REQUEST_URI'],'/charge')){
         http_response_code(404);
         echo "wrong path, make sure it's '/charge'"; exit();
@@ -32,6 +32,7 @@
                 'Content-Type: application/json',
                 'Accept: application/json',
                 'Authorization: Basic'. base64_encode($server_key.':'),
+                'X-UI-SKIN: uikit'
             ),
             CURLOPT_POSTFIELDS => $request_body
         );
