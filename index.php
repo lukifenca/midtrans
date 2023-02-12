@@ -1,7 +1,7 @@
 <?php
 
 // replace with your actual server key
-$serverKey = 'YOUR_SERVER_KEY';
+$serverKey = 'SB-Mid-server-gluxBxY-uVxizDzkxad_5JCX';
 
 // replace with your transaction data
 $data = [
