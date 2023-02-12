@@ -1,7 +1,7 @@
 <?php
 
 // replace with your actual server key
-$serverKey = 'SB-Mid-server-gluxBxY-uVxizDzkxad_5JCX';
+$serverKey = 'YOUR_SERVER_KEY';
 
 // replace with your transaction data
 $data = [
@@ -25,7 +25,7 @@ $data = [
     ]
 ];
 
- $apiUrl = "https://midtrans.herokuapp.com/index.php/";
+ $apiUrl = "https://app.sandbox.midtrans.com/snap/v2/transactions";
 
 // Set request header
 $header = [
