@@ -4,11 +4,11 @@
     $is_production = false;
     $api_url = $is_production ? 'https://app.midtrans.com/snap/v2/transactions' : 'https://app.sandbox.midtrans.com/snap/v2/transactions';
     if(!strpos($_SERVER['REQUEST_URI'],'/charge')){
-        http_response_code(405);
+        http_response_code(404);
         echo "wrong path, make sure it's '/charge'"; exit();
     }
     if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-        http_response_code(406);
+        http_response_code(404);
         echo "Page not found or wrong HTTP request method is used"; exit();
     }
 
