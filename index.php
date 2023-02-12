@@ -1,52 +1,46 @@
-<?php
+<?php 
+    $server_key = "SB-Mid-server-gluxBxY-uVxizDzkxad_5JCX";
 
-$serverKey = "SB-Mid-server-gluxBxY-uVxizDzkxad_5JCX";
-$apiUrl = "https://app.sandbox.midtrans.com/snap/v2/transactions";
+    $is_production = false;
+    $api_url = $is_production ? 'https://app.midtrans.com/snap/v2/transactions' : 'https://app.sandbox.midtrans.com/snap/v2/transactions';
+    if(!strpos($_SERVER['REQUEST_URI'],'/charge')){
+        http_response_code(404);
+        echo "wrong path, make sure it's '/charge'"; exit();
+    }
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+        http_response_code(404);
+        echo "Page not found or wrong HTTP request method is used"; exit();
+    }
 
-$orderId = "ORDER-ID";
-$grossAmount = "100000";
+    $request_body = file_get_contents('php://input');
+    header('Content-Type: application/json');
 
-$request = [
-    'transaction_details' => [
-        'order_id' => $orderId,
-        'gross_amount' => $grossAmount
-    ],
-    'item_details' => [
-        [
-            'id' => "Item 1",
-            'price' => 100000,
-            'quantity' => 1,
-            'name' => "Item 1"
-        ]
-    ]
-];
+    $charge_result = chargeAPI($api_url,$server_key,$request_body);
 
-$curl = curl_init();
-curl_setopt_array($curl, array(
-    CURLOPT_URL => $apiUrl,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => "",
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 30,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => "POST",
-    CURLOPT_POSTFIELDS => json_encode($request),
-    CURLOPT_HTTPHEADER => [
-        "accept: application/json",
-        "content-type: application/json",
-        "Authorization: Basic " . base64_encode($serverKey . ":")
-    ],
-));
+    http_response_code($charge_result['http_code']);
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
+    echo $charge_result['body'];
 
-curl_close($curl);
-
-if ($err) {
-    echo "cURL Error #:" . $err;
-} else {
-    echo $response;
-}
-
+    function chargeAPI($api_url,$server_key,$request_body){
+        $ch = curl_init();
+        $curl_option = array(
+            CURLOPT_URL => $api_url,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_HEADER => 0,
+            CURLOPT_HEADER => array(
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Authorization: Basic'. base64_encode($server_key.':'),
+                'X-UI-SKIN: uikit'
+            ),
+            CURLOPT_POSTFIELDS => $request_body
+        );
+        curl_setopt_array($ch,$curl_option);
+        $result = array(
+            'body' => curl_exec($ch),
+            'http_code' => curl_getinfo($ch,CURLINFO_HTTP_CODE),
+        );
+        return $result;
+    }
 ?>
